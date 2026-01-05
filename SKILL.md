@@ -1,6 +1,6 @@
 ---
 name: prompt-guru
-description: Generuje zoptymalizowane prompty dla modeli AI (Claude 4.5, GPT-5.2, Grok 4.1, Gemini 3 Pro, Nano Banana). Używaj gdy potrzebujesz stworzyć prompt, zoptymalizować istniejący prompt, lub wygenerować prompt dla konkretnego modelu. Tworzy 3 wersje (rozbudowana, standardowa, minimalna).
+description: Generuje zoptymalizowane prompty dla modeli AI (Claude 4.5, GPT-5.2, Grok 4.1, Gemini 3 Pro, Nano Banana, Perplexity Pro). Używaj gdy potrzebujesz stworzyć prompt, zoptymalizować istniejący prompt, lub wygenerować prompt dla konkretnego modelu. Tworzy 3 wersje (rozbudowana, standardowa, minimalna).
 ---
 
 # Prompt Guru
@@ -23,17 +23,24 @@ Specjalistyczny skill do tworzenia i optymalizacji promptów dla różnych model
 |-------|-----------|---------------|------|
 | Nano Banana 2.5 | Google DeepMind | Generowanie i edycja obrazów | [nano-banana.md](models/nano-banana.md) |
 
+### Wyszukiwarki AI
+| Model | Producent | Specjalizacja | Plik |
+|-------|-----------|---------------|------|
+| Perplexity Pro | Perplexity AI | Wyszukiwanie + Deep Research | [perplexity-pro.md](models/perplexity-pro.md) |
+
 ### Który model wybrać?
 
 | Zadanie | Najlepszy wybór | Alternatywa |
 |---------|-----------------|-------------|
 | Code Review | Claude 4.5 Opus | GPT-5.2 |
 | Szybkie kodowanie | Claude 4.5 Sonnet | Grok 4.1 |
-| Aktualne informacje | Grok 4.1 (DeepSearch) | - |
+| Aktualne informacje | Perplexity Pro | Grok 4.1 |
+| Research / raporty | Perplexity Deep Research | Claude Opus |
 | Długie dokumenty (>100k) | Gemini 3 Pro (1M tokenów) | Claude |
 | Generowanie obrazów | Nano Banana 2.5 | - |
 | Pisanie kreatywne | GPT-5.2 (temp 1.0) | Claude |
 | Analiza multimodalna | Gemini 3 Pro | Claude |
+| Fact-checking | Perplexity Pro (Academic) | - |
 
 ## Zasoby
 
@@ -65,6 +72,9 @@ Dla częstych przypadków użyj skróconych ścieżek:
 | "obraz", "zdjęcie", "grafika" | Model: Nano Banana (auto), zapytaj: Co ma przedstawiać? |
 | "tłumaczenie", "przetłumacz" | Zapytaj: Z jakiego na jaki język? Jaki styl? |
 | "podsumowanie", "streszczenie" | Zapytaj: Jak długie? Dla kogo? |
+| "research", "badanie", "analiza rynku" | Model: Perplexity Deep Research, zapytaj: Jaki temat? Jakie źródła? |
+| "sprawdź", "zweryfikuj", "fact-check" | Model: Perplexity Pro, zapytaj: Co sprawdzić? |
+| "aktualne", "najnowsze", "2024/2025" | Model: Perplexity Pro, zapytaj: Jaki temat? |
 
 ---
 
@@ -84,6 +94,8 @@ Zadaj tylko 2-3 pytania:
    - Grok 4.1 (aktualne informacje)
    - Gemini 3 Pro (multimodal, długi kontekst)
    - Nano Banana 2.5 (obrazy)
+   - Perplexity Pro (wyszukiwanie, research)
+   - Perplexity Deep Research (raporty, analizy)
 
 2. **Wersja promptu**: "Którą wersję chcesz?"
    - **Rozbudowana** - dla złożonych zadań, API, produkcji
@@ -132,6 +144,7 @@ Po zebraniu kontekstu, załaduj odpowiedni plik z `models/`:
 - Grok: [models/grok-4.md](models/grok-4.md)
 - Gemini: [models/gemini-3.md](models/gemini-3.md)
 - Nano Banana: [models/nano-banana.md](models/nano-banana.md)
+- Perplexity: [models/perplexity-pro.md](models/perplexity-pro.md)
 
 **Skup się na sekcji TL;DR** na początku pliku - zawiera najważniejsze zasady.
 
@@ -278,13 +291,15 @@ Przeanalizuj oryginalny prompt pod kątem:
 
 ### Kluczowe różnice między modelami
 
-| Aspekt | Claude 4.5 | GPT-5.2 | Grok 4.1 | Gemini 3 |
-|--------|------------|---------|----------|----------|
-| Dosłowność | Bardzo wysoka | Wysoka | Średnia | Wysoka |
-| Preferowana struktura | XML tagi | Markdown | Markdown/XML | Role+Goal+Constraints |
-| Słowo "think" | **Unikać!** | OK | OK (think mode) | OK |
-| Temperatura | Domyślna | Domyślna | Domyślna | **1.0 (nie zmieniać!)** |
-| Długość promptu | Explicite | Skonsolidowany | Iteracyjny | **30-50% krócej** |
+| Aspekt | Claude 4.5 | GPT-5.2 | Grok 4.1 | Gemini 3 | Perplexity |
+|--------|------------|---------|----------|----------|------------|
+| Dosłowność | Bardzo wysoka | Wysoka | Średnia | Wysoka | Wysoka |
+| Preferowana struktura | XML tagi | Markdown | Markdown/XML | Role+Goal+Constraints | Search query |
+| Słowo "think" | **Unikać!** | OK | OK (think mode) | OK | OK |
+| Temperatura | Domyślna | Domyślna | Domyślna | **1.0 (nie zmieniać!)** | N/A |
+| Długość promptu | Explicite | Skonsolidowany | Iteracyjny | **30-50% krócej** | Konkretny |
+| Few-shot | Pomaga | Pomaga | Pomaga | Pomaga | **Nie używać!** |
+| Role-playing | Działa | Działa | Działa | Działa | **Nie działa** |
 
 ### Błędy do unikania
 
@@ -295,6 +310,7 @@ Przeanalizuj oryginalny prompt pod kątem:
 | Grok 4.1 | Zbyt długie prompty zamiast iteracji |
 | Gemini 3 | Obniżanie temperatury poniżej 1.0 |
 | Nano Banana | Zbyt techniczne opisy zamiast naturalnego języka |
+| Perplexity | Few-shot examples i role-playing ("Jesteś ekspertem...") |
 
 ---
 

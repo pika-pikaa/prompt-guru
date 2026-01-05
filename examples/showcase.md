@@ -587,6 +587,132 @@ Styl: premium product photography jak w reklamie Apple.
 
 ---
 
+---
+
+## Przykład 11: Research z Perplexity Pro
+
+### Cel użytkownika:
+"Chcę zbadać rynek AI w Polsce"
+
+### PRZED (słaby prompt):
+```
+Opowiedz o rynku AI w Polsce
+```
+
+### PO optymalizacji:
+
+#### Deep Research (Rozbudowany):
+```
+Deep Research: Analiza rynku sztucznej inteligencji w Polsce 2024-2025.
+
+Zakres:
+- Wielkość rynku i dynamika wzrostu (dane liczbowe)
+- Główni gracze (polskie startupy AI, globalne firmy z oddziałami w PL)
+- Sektory z największą adopcją AI (fintech, e-commerce, produkcja)
+- Programy wsparcia (NCBiR, fundusze EU, PFR)
+
+Źródła: raporty PWC, Deloitte, McKinsey, dane GUS, komunikaty prasowe.
+
+Format:
+1. Executive summary (5 punktów)
+2. Analiza szczegółowa per sektor
+3. Tabela porównawcza głównych graczy
+4. Prognozy 2025-2027
+```
+
+#### Pro Search (Standardowy):
+```
+Rynek AI w Polsce 2024-2025:
+wielkość, główni gracze, sektory z największą adopcją.
+Dane z raportów branżowych i oficjalnych statystyk.
+Format: podsumowanie + tabela + źródła.
+```
+
+#### Quick Search (Minimalny):
+```
+Największe polskie firmy AI 2024 - lista top 10 z opisem działalności
+```
+
+---
+
+## Przykład 12: Fact-checking z Perplexity
+
+### Cel użytkownika:
+"Sprawdź czy to prawda"
+
+### PRZED (słaby prompt):
+```
+Czy to prawda że [twierdzenie]?
+```
+
+### PO optymalizacji:
+
+#### Perplexity Pro (Academic Focus):
+```
+Zweryfikuj twierdzenie: "[dokładne twierdzenie do sprawdzenia]"
+
+Znajdź:
+1. Źródła potwierdzające (z datą publikacji)
+2. Źródła zaprzeczające (jeśli istnieją)
+3. Kontekst - czy twierdzenie jest kompletne czy wyrwane z kontekstu
+
+Oceń wiarygodność na podstawie:
+- Jakości źródeł (peer-reviewed vs blog)
+- Zgodności między źródłami
+- Aktualności danych
+
+Jeśli nie znajdziesz wiarygodnych źródeł - powiedz wprost.
+```
+
+---
+
+## Przykład 13: Optymalizacja promptu dla Perplexity
+
+### Oryginalny prompt użytkownika:
+```
+Jesteś ekspertem od marketingu digitalowego. Powiedz mi wszystko
+o najnowszych trendach w social media. Oto przykład dobrej analizy:
+[długi przykład]. Teraz zrób podobną analizę dla TikTok.
+```
+
+### Analiza problemów:
+
+| Problem | Dlaczego to problem |
+|---------|---------------------|
+| "Jesteś ekspertem" | Role-playing nie działa z wyszukiwarką |
+| Few-shot example | Perplexity szuka przykładu zamiast odpowiedzi |
+| "Wszystko o..." | Zbyt szerokie zapytanie |
+| Brak zakresu czasowego | Nie wiadomo jak aktualne dane |
+
+### Zoptymalizowany prompt:
+
+```
+Trendy w marketingu na TikTok Q4 2024 - Q1 2025:
+
+1. Zmiany w algorytmie wpływające na zasięgi
+2. Nowe formaty reklamowe i ich skuteczność (CTR, CPA)
+3. Case studies marek z branży [Twoja branża]
+4. Statystyki demograficzne użytkowników PL
+
+Źródła: oficjalne dane TikTok for Business, raporty Hootsuite/Sprout Social,
+case studies z uznanych agencji.
+
+Format: bullet points z konkretnymi liczbami + źródła.
+```
+
+### Wprowadzone zmiany:
+
+| Zmiana | Powód |
+|--------|-------|
+| Usunięto role-playing | Nie działa z wyszukiwarką |
+| Usunięto few-shot | Myli algorytm wyszukiwania |
+| Dodano zakres czasowy | Q4 2024 - Q1 2025 |
+| Sprecyzowano metryki | CTR, CPA zamiast "skuteczność" |
+| Określono źródła | Konkretne raporty i portale |
+| Format z liczbami | Łatwiejsze do weryfikacji |
+
+---
+
 ## Podsumowanie optymalizacji
 
 ### Najczęstsze błędy do poprawy:
@@ -599,6 +725,9 @@ Styl: premium product photography jak w reklamie Apple.
 | Za długi dla Gemini | Skróć o 30-50%, instrukcje na końcu |
 | Parametry techniczne dla Nano Banana | Użyj naturalnego języka |
 | Brak formatu outputu | Zawsze określ oczekiwaną strukturę |
+| Role-playing dla Perplexity | Usuń "Jesteś ekspertem...", użyj search query |
+| Few-shot dla Perplexity | Usuń przykłady, mylą wyszukiwarkę |
+| Brak zakresu czasowego (Perplexity) | Dodaj daty: "2024-2025", "Q4 2024" |
 
 ### Checklist optymalizacji:
 - [ ] Usunięto sprzeczne instrukcje
@@ -607,3 +736,4 @@ Styl: premium product photography jak w reklamie Apple.
 - [ ] Określono format outputu
 - [ ] Usunięto nadmiarowe słowa ("bardzo", "dokładnie")
 - [ ] Sprawdzono zabronione wzorce (np. "think" dla Claude)
+- [ ] Dla Perplexity: brak role-playing i few-shot, dodany zakres czasowy
