@@ -713,6 +713,175 @@ Format: bullet points z konkretnymi liczbami + źródła.
 
 ---
 
+## Przykład 14: Generowanie obrazu (Grok Aurora)
+
+### Cel użytkownika:
+"Zdjęcie produktowe smartwatcha"
+
+### PRZED (słaby prompt):
+```
+Smartwatch on table
+```
+
+### PO optymalizacji:
+
+#### Rozbudowany:
+```
+Premium smartwatch with dark titanium case floating above minimalist
+slate surface, dramatic studio lighting from upper left creating
+subtle reflections on sapphire glass, sharp focus on watch face
+showing fitness metrics, shallow depth of field with bokeh background,
+high-end commercial product photography style, neutral color palette
+with subtle blue accent light
+```
+
+#### Standardowy:
+```
+Modern smartwatch on dark slate surface,
+professional studio lighting, premium product photography,
+sharp details on display, bokeh background, commercial style
+```
+
+#### Minimalny:
+```
+Smartwatch premium product shot, studio lighting,
+dark slate surface, commercial photography style
+```
+
+### Dlaczego to działa:
+- **Subject-first**: Smartwatch na początku
+- **Język fotograficzny**: bokeh, depth of field, studio lighting
+- **Długość**: ~400 znaków (optymalne dla Aurora)
+- **Konkretny styl**: commercial/premium product
+
+---
+
+## Przykład 15: Generowanie wideo (Grok Imagine)
+
+### Cel użytkownika:
+"Animacja logo firmy technologicznej"
+
+### PRZED (słaby prompt):
+```
+Tech logo animation
+```
+
+### PO optymalizacji:
+
+#### Rozbudowany:
+```
+Sleek metallic tech logo materializing from floating particles,
+dark studio environment with subtle blue rim lighting,
+slow camera push in towards logo, particles coalescing smoothly,
+premium corporate video style, dramatic atmosphere,
+cinematic shallow depth of field, seamless loop
+```
+
+#### Standardowy:
+```
+Tech logo forming from digital particles,
+dark background with blue accent light,
+slow zoom in, cinematic corporate style, perfect loop
+```
+
+#### Minimalny:
+```
+Metallic logo reveal animation, particles forming shape,
+dark background, blue light, slow zoom, loop
+```
+
+### Dlaczego to działa:
+- **Ruch explicite opisany**: "materializing", "coalescing", "push in"
+- **Proste ruchy**: jedno logo, jeden kierunek kamery
+- **Loop zaznaczony**: "seamless loop" dla social media
+- **Brak tekstu/rąk**: unikamy problematycznych elementów
+
+---
+
+## Przykład 16: Optymalizacja promptu dla Grok Aurora
+
+### Oryginalny prompt użytkownika:
+```
+I want a super amazing ultra realistic photograph of a beautiful
+young woman with perfect skin and gorgeous eyes standing in a
+magical forest with rays of light and butterflies and flowers
+everywhere, make it look like a professional photograph with
+perfect lighting and colors, maybe add some mist, 8k quality
+```
+
+### Analiza problemów:
+
+| Problem | Dlaczego to problem |
+|---------|---------------------|
+| Zbyt długi i rozwlekły | Aurora optymalna przy 600-700 znaków |
+| Wiele podmiotów | Kobieta + las + motyle + kwiaty + mgła = rozproszenie |
+| "Beautiful/perfect/amazing" | Puste przymiotniki nie pomagają |
+| "8k quality" | Parametr techniczny, Aurora go ignoruje |
+| Szczegółowy opis twarzy | Ryzyko zniekształceń |
+
+### Zoptymalizowany prompt:
+
+```
+Young woman in enchanted forest at golden hour, soft sunlight
+filtering through trees creating volumetric light rays, ethereal
+atmosphere with gentle morning mist, natural pose looking
+toward light source, shallow depth of field, fine art portrait
+photography style, dreamlike mood, warm color palette
+```
+
+### Wprowadzone zmiany:
+
+| Zmiana | Powód |
+|--------|-------|
+| Skrócono o ~40% | Optymalny zakres dla Aurora |
+| Usunięto "beautiful/perfect" | Konkretne opisy zamiast przymiotników |
+| Jeden główny podmiot | Kobieta w centrum, las jako tło |
+| Usunięto motyle/kwiaty | Uproszczenie sceny, więcej fokus |
+| Język fotograficzny | "Volumetric rays", "shallow depth of field" |
+| Usunięto "8k" | Parametr techniczny niepotrzebny |
+
+---
+
+## Przykład 17: Atmosferyczne wideo (Grok Imagine)
+
+### Cel użytkownika:
+"Relaksujące wideo z kominkiem na tło"
+
+### PRZED (słaby prompt):
+```
+Fireplace video
+```
+
+### PO optymalizacji:
+
+#### Rozbudowany:
+```
+Crackling fireplace flames dancing in cozy living room,
+warm amber and orange light flickering on nearby furniture,
+static close-up shot of fire, soft wood textures visible,
+hygge winter atmosphere, ASMR aesthetic with realistic sound,
+perfect seamless loop for ambient display
+```
+
+#### Standardowy:
+```
+Fireplace flames dancing continuously, warm cozy living room,
+static close-up, crackling fire ambiance, seamless loop
+```
+
+#### Minimalny:
+```
+Fireplace flames, cozy atmosphere, static shot, perfect loop
+```
+
+### Dlaczego to działa:
+- **Ruch prosty**: płomienie w jednym miejscu
+- **Kamera statyczna**: idealna dla ambient
+- **"Seamless loop"**: kluczowe dla tła
+- **Nastrój opisany**: "hygge", "ASMR", "cozy"
+
+---
+
 ## Podsumowanie optymalizacji
 
 ### Najczęstsze błędy do poprawy:
@@ -728,6 +897,11 @@ Format: bullet points z konkretnymi liczbami + źródła.
 | Role-playing dla Perplexity | Usuń "Jesteś ekspertem...", użyj search query |
 | Few-shot dla Perplexity | Usuń przykłady, mylą wyszukiwarkę |
 | Brak zakresu czasowego (Perplexity) | Dodaj daty: "2024-2025", "Q4 2024" |
+| Zbyt długi dla Grok Aurora | Optymalna długość: 600-700 znaków |
+| Brak języka fotograficznego (Aurora) | Użyj: bokeh, wide-angle, golden hour |
+| Podmiot nie na początku (Aurora) | Subject-first: najważniejszy element pierwszy |
+| Złożone ruchy dla Imagine | Proste akcje: walking, turning, floating |
+| Brak opisu ruchu kamery (Imagine) | Dodaj: pan, zoom, tracking, static |
 
 ### Checklist optymalizacji:
 - [ ] Usunięto sprzeczne instrukcje
@@ -737,3 +911,5 @@ Format: bullet points z konkretnymi liczbami + źródła.
 - [ ] Usunięto nadmiarowe słowa ("bardzo", "dokładnie")
 - [ ] Sprawdzono zabronione wzorce (np. "think" dla Claude)
 - [ ] Dla Perplexity: brak role-playing i few-shot, dodany zakres czasowy
+- [ ] Dla Grok Aurora: subject-first, język fotograficzny, 600-700 znaków
+- [ ] Dla Grok Imagine: opisany ruch podmiot+kamera, proste akcje, loop jeśli potrzebny

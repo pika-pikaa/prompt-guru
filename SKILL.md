@@ -1,6 +1,6 @@
 ---
 name: prompt-guru
-description: Generuje zoptymalizowane prompty dla modeli AI (Claude 4.5, GPT-5.2, Grok 4.1, Gemini 3 Pro, Nano Banana, Perplexity Pro). Używaj gdy potrzebujesz stworzyć prompt, zoptymalizować istniejący prompt, lub wygenerować prompt dla konkretnego modelu. Tworzy 3 wersje (rozbudowana, standardowa, minimalna).
+description: Generuje zoptymalizowane prompty dla modeli AI (Claude 4.5, GPT-5.2, Grok 4.1, Gemini 3 Pro, Nano Banana, Grok Aurora, Perplexity Pro). Używaj gdy potrzebujesz stworzyć prompt, zoptymalizować istniejący prompt, lub wygenerować prompt dla konkretnego modelu. Tworzy 3 wersje (rozbudowana, standardowa, minimalna).
 ---
 
 # Prompt Guru
@@ -22,6 +22,12 @@ Specjalistyczny skill do tworzenia i optymalizacji promptów dla różnych model
 | Model | Producent | Specjalizacja | Plik |
 |-------|-----------|---------------|------|
 | Nano Banana 2.5 | Google DeepMind | Generowanie i edycja obrazów | [nano-banana.md](models/nano-banana.md) |
+| Grok Aurora | xAI | Fotorealizm, tekst w obrazach | [grok-aurora.md](models/grok-aurora.md) |
+
+### Modele wideo
+| Model | Producent | Specjalizacja | Plik |
+|-------|-----------|---------------|------|
+| Grok Imagine | xAI | Wideo 6-15s z audio | [grok-aurora.md](models/grok-aurora.md) |
 
 ### Wyszukiwarki AI
 | Model | Producent | Specjalizacja | Plik |
@@ -37,7 +43,11 @@ Specjalistyczny skill do tworzenia i optymalizacji promptów dla różnych model
 | Aktualne informacje | Perplexity Pro | Grok 4.1 |
 | Research / raporty | Perplexity Deep Research | Claude Opus |
 | Długie dokumenty (>100k) | Gemini 3 Pro (1M tokenów) | Claude |
-| Generowanie obrazów | Nano Banana 2.5 | - |
+| Generowanie obrazów | Grok Aurora | Nano Banana |
+| Fotorealistyczne portrety | Grok Aurora | Nano Banana |
+| Tekst/logo w obrazie | Grok Aurora | - |
+| Spójność wielu osób | Nano Banana (do 5 osób) | - |
+| Generowanie wideo | Grok Imagine | - |
 | Pisanie kreatywne | GPT-5.2 (temp 1.0) | Claude |
 | Analiza multimodalna | Gemini 3 Pro | Claude |
 | Fact-checking | Perplexity Pro (Academic) | - |
@@ -75,6 +85,8 @@ Dla częstych przypadków użyj skróconych ścieżek:
 | "research", "badanie", "analiza rynku" | Model: Perplexity Deep Research, zapytaj: Jaki temat? Jakie źródła? |
 | "sprawdź", "zweryfikuj", "fact-check" | Model: Perplexity Pro, zapytaj: Co sprawdzić? |
 | "aktualne", "najnowsze", "2024/2025" | Model: Perplexity Pro, zapytaj: Jaki temat? |
+| "wideo", "animacja", "clip", "film" | Model: Grok Imagine, zapytaj: Co ma przedstawiać? Jaki ruch? |
+| "fotorealistyczny", "portret", "headshot" | Model: Grok Aurora, zapytaj: Kogo/co? Jaki styl? |
 
 ---
 
@@ -93,7 +105,9 @@ Zadaj tylko 2-3 pytania:
    - ChatGPT 5.2 (OpenAI)
    - Grok 4.1 (aktualne informacje)
    - Gemini 3 Pro (multimodal, długi kontekst)
-   - Nano Banana 2.5 (obrazy)
+   - Nano Banana 2.5 (obrazy, spójność postaci)
+   - Grok Aurora (obrazy, fotorealizm, tekst)
+   - Grok Imagine (wideo 6-15s z audio)
    - Perplexity Pro (wyszukiwanie, research)
    - Perplexity Deep Research (raporty, analizy)
 
@@ -144,6 +158,7 @@ Po zebraniu kontekstu, załaduj odpowiedni plik z `models/`:
 - Grok: [models/grok-4.md](models/grok-4.md)
 - Gemini: [models/gemini-3.md](models/gemini-3.md)
 - Nano Banana: [models/nano-banana.md](models/nano-banana.md)
+- Grok Aurora/Imagine: [models/grok-aurora.md](models/grok-aurora.md)
 - Perplexity: [models/perplexity-pro.md](models/perplexity-pro.md)
 
 **Skup się na sekcji TL;DR** na początku pliku - zawiera najważniejsze zasady.
@@ -301,6 +316,18 @@ Przeanalizuj oryginalny prompt pod kątem:
 | Few-shot | Pomaga | Pomaga | Pomaga | Pomaga | **Nie używać!** |
 | Role-playing | Działa | Działa | Działa | Działa | **Nie działa** |
 
+### Modele obrazowe/wideo - porównanie
+
+| Aspekt | Grok Aurora | Grok Imagine | Nano Banana |
+|--------|-------------|--------------|-------------|
+| Output | Obraz | Wideo 6-15s | Obraz |
+| Architektura | Autoregressive | Autoregressive | Diffusion |
+| Język promptu | Fotograficzny | Filmowy | Naturalny |
+| Długość promptu | 600-700 znaków | 600-700 znaków | Krótszy |
+| Tekst w obrazie | Dobry | Słaby | Słaby |
+| Spójność postaci | Ograniczona | Ograniczona | Do 5 osób |
+| Struktura | Subject-first | Subject+Motion | Opisowy |
+
 ### Błędy do unikania
 
 | Model | Krytyczny błąd |
@@ -310,6 +337,7 @@ Przeanalizuj oryginalny prompt pod kątem:
 | Grok 4.1 | Zbyt długie prompty zamiast iteracji |
 | Gemini 3 | Obniżanie temperatury poniżej 1.0 |
 | Nano Banana | Zbyt techniczne opisy zamiast naturalnego języka |
+| Grok Aurora/Imagine | Ręce, złożony tekst, zbyt długie prompty (>700 znaków) |
 | Perplexity | Few-shot examples i role-playing ("Jesteś ekspertem...") |
 
 ---
