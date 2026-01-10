@@ -89,6 +89,7 @@ export const PromptDetailPage: FC = () => {
     [toast]
   );
 
+  // eslint-disable-next-line react-hooks/preserve-manual-memoization
   const handleToggleFavorite = useCallback(async () => {
     if (!id) return;
     try {

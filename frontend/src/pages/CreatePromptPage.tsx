@@ -39,9 +39,17 @@ const GeneratingIndicator: FC<GeneratingIndicatorProps> = ({ isVisible }) => {
   const [progress, setProgress] = useState(0);
   const reducedMotion = prefersReducedMotion();
 
+  // Reset progress when component becomes invisible
+  // This is intentional - we want to reset UI state when hiding the indicator
   useEffect(() => {
     if (!isVisible) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setProgress(0);
+    }
+  }, [isVisible]);
+
+  useEffect(() => {
+    if (!isVisible) {
       return;
     }
 
@@ -194,12 +202,9 @@ export const CreatePromptPage: FC = () => {
     [generatePrompt, toast]
   );
 
-  const handleCopy = useCallback(
-    (_content: string, _versionType: string) => {
-      toast.success('Skopiowano!', 'Prompt skopiowany do schowka.');
-    },
-    [toast]
-  );
+  const handleCopy = useCallback(() => {
+    toast.success('Skopiowano!', 'Prompt skopiowany do schowka.');
+  }, [toast]);
 
   const handleSave = useCallback(
     async (version: PromptVersion) => {

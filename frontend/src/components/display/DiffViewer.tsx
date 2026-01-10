@@ -176,17 +176,18 @@ export const DiffViewer: FC<DiffViewerProps> = ({
   className,
 }) => {
   const isMobile = useIsMobile();
-  const [viewMode, setViewMode] = useState<ViewMode>(() =>
+  const [viewModeState, setViewModeState] = useState<ViewMode>(() =>
     typeof window !== 'undefined' && window.innerWidth < 768 ? 'unified' : 'side-by-side'
   );
   const [copiedSide, setCopiedSide] = useState<'original' | 'optimized' | null>(null);
 
-  // Auto-switch to unified mode on mobile
-  useEffect(() => {
-    if (isMobile && viewMode === 'side-by-side') {
-      setViewMode('unified');
+  // Derive effective view mode - force unified on mobile
+  const viewMode = isMobile ? 'unified' : viewModeState;
+  const setViewMode = (mode: ViewMode) => {
+    if (!isMobile) {
+      setViewModeState(mode);
     }
-  }, [isMobile, viewMode]);
+  };
 
   const diff = useMemo(
     () => computeDiff(originalText, optimizedText),

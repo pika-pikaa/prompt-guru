@@ -58,8 +58,8 @@ COPY --from=build /app/dist ./dist
 # Copy Prisma files (schema and generated client)
 COPY --from=build /app/prisma ./prisma
 
-# Copy models directory (for markdown parsing service)
-COPY --chown=nodejs:nodejs models ./models
+# Note: Models directory should be mounted as a volume in docker-compose
+# or provided via MODELS_PATH environment variable
 
 # Set ownership to non-root user
 RUN chown -R nodejs:nodejs /app

@@ -164,7 +164,7 @@ export const OptimizePage: FC = () => {
             originalText={originalPrompt}
             optimizedText={optimizedPrompt}
             improvements={optimizationImprovements}
-            onCopy={(_text) => toast.success('Skopiowano!', 'Tekst skopiowany do schowka.')}
+            onCopy={() => toast.success('Skopiowano!', 'Tekst skopiowany do schowka.')}
           />
         )}
 

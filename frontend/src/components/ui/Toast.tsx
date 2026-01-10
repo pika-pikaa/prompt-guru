@@ -150,6 +150,7 @@ export const ToastContainer: FC = () => {
 ToastContainer.displayName = 'ToastContainer';
 
 // Helper hook for using toasts
+// eslint-disable-next-line react-refresh/only-export-components
 export const useToast = () => {
   const addToast = useUIStore((state) => state.addToast);
   const removeToast = useUIStore((state) => state.removeToast);

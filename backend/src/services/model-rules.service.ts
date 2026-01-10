@@ -45,9 +45,10 @@ export interface ModelRules extends ExtractedRules {
 // Model Configuration
 // ============================================================================
 
-const MODELS_BASE_PATH = path.resolve(
+// In production/Docker, models are at /app/models
+// In development (local), they may be at ../models from backend
+const MODELS_BASE_PATH = process.env.MODELS_PATH || path.resolve(
   process.cwd(),
-  '..',
   'models'
 );
 
