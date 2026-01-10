@@ -38,7 +38,7 @@ export default [
     },
   },
   {
-    ignores: ['dist/**', 'node_modules/**', '*.config.js'],
+    ignores: ['dist/**', 'node_modules/**', '*.config.js', 'src/**/*.test.ts', 'src/**/__tests__/**'],
   },
   prettier,
 ];
