@@ -1,0 +1,147 @@
+// Prisma Schema for Prompt Guru
+// https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================================
+// ENUMS
+// ============================================================================
+
+enum Role {
+  USER
+  ADMIN
+}
+
+/// Supported AI models for prompt generation
+enum AIModel {
+  CLAUDE_4 // Claude 4.5 (Anthropic)
+  GPT_5 // GPT-5.2 (OpenAI)
+  GROK_4 // Grok 4.1 (xAI)
+  GEMINI_3 // Gemini 3 Pro (Google)
+  NANO_BANANA // Nano Banana (Custom/Fun)
+  GROK_AURORA // Grok Aurora - Image generation (xAI)
+  PERPLEXITY_PRO // Perplexity Pro with Deep Research
+}
+
+/// Prompt version types - different optimization levels
+enum VersionType {
+  EXTENDED // Full, detailed prompt with all context
+  STANDARD // Balanced prompt for general use
+  MINIMAL // Concise prompt for token efficiency
+}
+
+// ============================================================================
+// MODELS
+// ============================================================================
+
+/// User model for authentication and authorization
+model User {
+  id        String   @id @default(uuid()) @db.Uuid
+  email     String   @unique @db.VarChar(255)
+  password  String   @db.VarChar(255) // bcrypt hash (60 chars, but allow headroom)
+  name      String?  @db.VarChar(100)
+  role      Role     @default(USER)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  // Relations
+  prompts       Prompt[]
+  favorites     Favorite[]
+  refreshTokens RefreshToken[]
+
+  @@index([email]) // Optimizes login lookups (unique already creates index, but explicit for clarity)
+  @@index([role]) // For admin panel user filtering
+  @@map("users")
+}
+
+/// Refresh tokens for JWT authentication
+/// Allows secure token rotation and revocation
+model RefreshToken {
+  id        String    @id @default(uuid()) @db.Uuid
+  token     String    @unique @db.VarChar(500) // JWT refresh token
+  expiresAt DateTime  @map("expires_at") @db.Timestamptz
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  revokedAt DateTime? @map("revoked_at") @db.Timestamptz // Null if active, set when revoked
+
+  // Device/session info for security auditing
+  userAgent String? @map("user_agent") @db.VarChar(500)
+  ipAddress String? @map("ip_address") @db.VarChar(45) // IPv6 max length
+
+  // Relations
+  userId String @map("user_id") @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId]) // FK index - required for efficient user token lookups
+  @@index([token]) // Unique already creates index, explicit for clarity
+  @@index([expiresAt]) // For cleanup jobs to find expired tokens
+  @@index([userId, revokedAt]) // Composite: find active tokens for a user
+  @@map("refresh_tokens")
+}
+
+/// Prompt template model - stores AI prompt templates
+model Prompt {
+  id          String  @id @default(uuid()) @db.Uuid
+  title       String  @db.VarChar(200)
+  description String? @db.Text
+  content     String  @db.Text // The actual prompt content
+
+  // AI Model targeting
+  model       AIModel // Target AI model for this prompt
+  versionType VersionType @default(STANDARD) @map("version_type")
+
+  // Categorization
+  category   String?  @db.VarChar(100)
+  tags       String[] // PostgreSQL array for tags
+  techniques String[] // Prompting techniques used (e.g., "chain-of-thought", "few-shot")
+
+  // Metadata
+  isPublic Boolean @default(false) @map("is_public")
+  version  Int     @default(1) // Schema version for backwards compatibility
+
+  // Timestamps
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  // Relations
+  authorId  String     @map("author_id") @db.Uuid
+  author    User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  favorites Favorite[]
+
+  // Indexes for query optimization
+  @@index([authorId]) // FK index - find prompts by author
+  @@index([model]) // Filter by AI model
+  @@index([versionType]) // Filter by version type
+  @@index([isPublic]) // Public prompt listings
+  @@index([category]) // Category browsing
+  @@index([createdAt(sort: Desc)]) // Recent prompts listing
+  @@index([isPublic, model]) // Composite: public prompts by model
+  @@index([authorId, isPublic]) // Composite: user's prompts filtered by visibility
+  @@map("prompts")
+}
+
+/// Favorites/bookmarks - junction table for User-Prompt many-to-many
+model Favorite {
+  id        String   @id @default(uuid()) @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  // Relations
+  userId String @map("user_id") @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  promptId String @map("prompt_id") @db.Uuid
+  prompt   Prompt @relation(fields: [promptId], references: [id], onDelete: Cascade)
+
+  // Constraints
+  @@unique([userId, promptId]) // Prevent duplicate favorites
+  @@index([userId]) // FK index - find user's favorites
+  @@index([promptId]) // FK index - find who favorited a prompt
+  @@index([createdAt(sort: Desc)]) // Recent favorites listing
+  @@map("favorites")
+}

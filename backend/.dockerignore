@@ -1,0 +1,54 @@
+# Dependencies
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build output (we build inside Docker)
+dist
+build
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# IDE and editor files
+.idea
+.vscode
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.gitignore
+
+# Docker
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# Test files
+coverage
+*.test.ts
+*.spec.ts
+__tests__
+vitest.config.ts
+
+# Documentation
+README.md
+CHANGELOG.md
+LICENSE
+
+# Prisma migrations (we'll run them separately)
+# Keep the schema and generated client
+prisma/migrations
+
+# Development files
+.eslintrc*
+.prettierrc*

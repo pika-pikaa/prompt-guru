@@ -1,0 +1,31 @@
+# =============================================================================
+# Backend Dockerfile - Development
+# TypeScript with hot reload using tsx watch
+# =============================================================================
+
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm ci --silent
+
+# Copy Prisma schema
+COPY prisma ./prisma/
+
+# Generate Prisma client
+RUN npx prisma generate
+
+# Copy TypeScript config
+COPY tsconfig.json ./
+
+# Source code will be mounted as volume for hot reload
+
+# Expose API port
+EXPOSE 4000
+
+# Start development server with hot reload
+CMD ["npm", "run", "dev"]

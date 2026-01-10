@@ -1,0 +1,136 @@
+# =============================================================================
+# Docker Compose - Production Environment
+# Prompt Guru Application Stack
+# =============================================================================
+# Usage:
+#   docker-compose -f docker-compose.prod.yml up -d          # Start production
+#   docker-compose -f docker-compose.prod.yml logs -f        # Follow all logs
+#   docker-compose -f docker-compose.prod.yml down           # Stop services
+# =============================================================================
+
+services:
+  # ---------------------------------------------------------------------------
+  # PostgreSQL Database (Production)
+  # ---------------------------------------------------------------------------
+  postgres:
+    image: postgres:15-alpine
+    container_name: prompt-guru-db-prod
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-promptguru}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB:-promptguru}"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    networks:
+      - prompt-guru-internal
+    # No external port exposure in production - only accessible via internal network
+
+  # ---------------------------------------------------------------------------
+  # Backend API (Production)
+  # ---------------------------------------------------------------------------
+  backend:
+    image: ${REGISTRY:-ghcr.io}/${REPOSITORY:-prompt-guru}/backend:${TAG:-latest}
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: prompt-guru-api-prod
+    restart: always
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-promptguru}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-15m}
+      JWT_REFRESH_EXPIRES_IN: ${JWT_REFRESH_EXPIRES_IN:-7d}
+      CORS_ORIGIN: ${CORS_ORIGIN:-https://prompt-guru.example.com}
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:4000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - prompt-guru-internal
+    # No external port exposure - accessible via nginx only
+
+  # ---------------------------------------------------------------------------
+  # Frontend with Nginx (Production)
+  # ---------------------------------------------------------------------------
+  frontend:
+    image: ${REGISTRY:-ghcr.io}/${REPOSITORY:-prompt-guru}/frontend:${TAG:-latest}
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: prompt-guru-web-prod
+    restart: always
+    ports:
+      - "${HTTP_PORT:-80}:80"
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 128M
+        reservations:
+          cpus: '0.1'
+          memory: 32M
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - prompt-guru-internal
+      - prompt-guru-external
+
+# =============================================================================
+# Volumes
+# =============================================================================
+volumes:
+  postgres_data:
+    name: prompt-guru-postgres-data-prod
+
+# =============================================================================
+# Networks
+# =============================================================================
+networks:
+  # Internal network - not accessible from outside
+  prompt-guru-internal:
+    name: prompt-guru-internal
+    driver: bridge
+    internal: true
+
+  # External network - for public-facing services
+  prompt-guru-external:
+    name: prompt-guru-external
+    driver: bridge
